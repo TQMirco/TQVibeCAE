@@ -1,0 +1,1 @@
+# Strategie Hypothesis riusabili

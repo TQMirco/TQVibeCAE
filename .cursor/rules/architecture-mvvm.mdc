@@ -1,0 +1,63 @@
+---
+description: Architettura MVVM rigida — confini Model, ViewModel, View
+globs: src/**/*.py
+alwaysApply: false
+---
+
+# MVVM — Confini rigidi
+
+## Model (`src/tqvibecae/model/`)
+
+- Solo Python standard + tipi; **vietato** importare `PySide6`, `QObject`, widget
+- Entità dominio, validazione, invarianti, eventi dominio
+- Deve compilare e testarsi **senza** PySide6 installato per i test unitari puri
+
+```python
+# BAD — Qt nel Model
+from PySide6.QtCore import QObject
+
+# GOOD — dominio puro
+from dataclasses import dataclass
+from uuid import UUID
+```
+
+## ViewModel (`src/tqvibecae/viewmodel/`)
+
+- Può usare `QObject`, `Signal`, `Property` per binding
+- Orchestrazione verso Model e `commands/`
+- **Vietato** importare widget concreti (`QPushButton`, `QGraphicsView`, …)
+
+```python
+# BAD
+from PySide6.QtWidgets import QPushButton
+
+# GOOD
+from PySide6.QtCore import QObject, Signal
+```
+
+## View (`src/tqvibecae/view/`)
+
+- Solo presentazione e cattura input utente
+- **Vietato** modificare direttamente il Model
+- Ogni azione passa dal ViewModel (segnali/slot o property)
+
+## Dipendenze ammesse
+
+```
+View → ViewModel → Model
+ViewModel → Model, commands, services
+Model → (nessuna dipendenza verso view/viewmodel)
+```
+
+## Qt Model/View nativo
+
+Usare `QAbstractItemModel` **solo** come adapter nel ViewModel.
+La fonte di verità resta sempre il Model di dominio.
+
+## Checklist agent
+
+Prima di proporre una modifica:
+
+1. Il Model resta libero da Qt?
+2. La View contiene logica di business? → spostarla in ViewModel o Model
+3. Esiste un test unitario sul Model senza pytest-qt?

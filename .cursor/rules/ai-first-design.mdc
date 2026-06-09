@@ -1,0 +1,79 @@
+---
+description: Design AI-first — command bus, query API JSON, schema machine-readable, automazioni
+alwaysApply: false
+---
+
+# AI-First Design
+
+Ogni feature deve essere eseguibile e ispezionabile da un agent AI **senza simulare click GUI**.
+
+## Command pattern (`src/tqvibecae/commands/`)
+
+Ogni mutazione di stato = `Command` serializzabile:
+
+```python
+class AddConductorPayload(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    conductor_id: UUID
+    # ...
+
+class AddConductorCommand(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    command_type: Literal["add_conductor"] = "add_conductor"
+    payload: AddConductorPayload
+    timestamp: datetime
+```
+
+- Undo/redo via stack comandi
+- AI esegue `CommandBus.execute(command)` — stesso path della UI
+- **Vietata** logica mutante nascosta in slot GUI
+
+## Query API (read-only)
+
+Funzioni pure separate dalle mutazioni, output JSON schema-stable:
+
+- `get_project_summary(project) -> dict`
+- `list_symbols(project) -> list[dict]`
+- `validate_project(project) -> list[ValidationIssue]`
+
+Nessun side effect nelle query.
+
+## Identificatori semantici
+
+Oltre a `UUID`:
+
+- `human_label: str`
+- `tags: frozenset[str]`
+- `role: str | None` (es. `"main_breaker"`)
+
+Utili per prompt AI e automazioni.
+
+## Contratti machine-readable
+
+- JSON Schema generato da Pydantic: `Project.model_json_schema()`
+- Committare snapshot in `docs/program/schemas/` (es. `project.schema.json`)
+- Serializzazione canonica: `model_dump(mode="json")` / `model_validate()`
+- Tooling AI (function calling, MCP): usare gli schema esportati come contratto
+
+## Event log (opzionale)
+
+Log append-only di comandi eseguiti → audit e replay AI.
+
+## Moduli e context
+
+- File < 400 righe; moduli focalizzati
+- Docstring che spiegano **intent**, non solo API
+- `services/ai/` per adapter LLM/MCP — **non** importa View
+
+## Flusso
+
+```
+AI → CommandBus → Model → domain_event → ViewModel → View
+AI → query API → JSON (read-only)
+```
+
+## Checklist nuova feature
+
+1. Esiste un Command per ogni azione utente?
+2. L'AI può validare/ispezionare via query JSON?
+3. Lo schema è documentato in `docs/program/schemas/`?

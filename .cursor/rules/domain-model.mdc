@@ -1,0 +1,90 @@
+---
+description: Modello dati dominio estensibile — entità, serializzazione, grafo elettrico
+globs: src/**/model/**/*.py,src/**/domain/**/*.py
+alwaysApply: false
+---
+
+# Domain Model — Priorità massima
+
+Il modello dati è il cuore del progetto. Deve restare **estensibile** senza overfitting sul caso attuale.
+
+## Identità e composizione
+
+- Ogni entità: `id: UUID` immutabile + `entity_type: str` (registry)
+- Composizione > ereditarietà profonda: basi sottili (`Entity`, `NamedEntity`, `Connectable`)
+- Comportamento via `Protocol` / mixin, non gerarchie profonde
+
+## Schema versionato
+
+- Root document (`Project`, `Drawing`): campo `schema_version: int`
+- Migrazioni esplicite; **no** silent upgrade
+- Documentare breaking change in ADR + footer commit `BREAKING CHANGE:`
+
+## Semantica vs presentazione
+
+Separare sempre concetti dominio da grafica:
+
+| Dominio | Presentazione |
+|---------|---------------|
+| `Conductor` | `WireGraphic` |
+| `SymbolRef` | `SymbolInstance` |
+
+## Grafo elettrico
+
+Modello esplicito:
+
+- **Nodi:** simboli, morsetti, bus
+- **Archi:** conduttori, collegamenti
+- Netlist / connettività **derivabile** dal grafo, non hardcoded in widget
+
+## Estensibilità plugin-ready
+
+Registry per tipi nuovi — **registrare**, non forkare classi base:
+
+- `SymbolDefinition`
+- `PropertySet`
+- `ValidationRule`
+
+## Serializzazione — Pydantic v2
+
+Entità dominio, payload Command e DTO: **`pydantic.BaseModel`** (frozen dove immutabile).
+
+```python
+from pydantic import BaseModel, ConfigDict, Field
+from uuid import UUID
+
+class Entity(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    id: UUID
+    entity_type: str
+
+class Project(BaseModel):
+    schema_version: int = Field(default=1, ge=1)
+    # ...
+
+    def to_json_dict(self) -> dict[str, object]:
+        return self.model_dump(mode="json")
+
+    @classmethod
+    def from_json_dict(cls, data: dict[str, object]) -> Project:
+        return cls.model_validate(data)
+```
+
+- Persistenza e AI: **`model_dump(mode="json")`** / **`model_validate()`**
+- JSON Schema: **`model_json_schema()`** → esportare in `docs/program/schemas/`
+- Discriminatori per union polimorfiche: `Field(discriminator="entity_type")`
+- **Vietato** `to_dict()`/`from_dict()` manuali se Pydantic copre il caso
+
+## Validazione
+
+- Costruttore Pydantic + `@model_validator` / `@field_validator` per invarianti
+- Mappare `ValidationError` → `ValidationIssue(code, severity, entity_path, message)` per UI/AI
+- Regole dominio complesse (grafo): validator + funzioni pure, non widget
+
+## Vocabolario
+
+CAD **elettrico**: quadri, protezioni, cavi, morsetti, schema unifilare.
+**Escludere:** SPICE, footprint PCB, layer Gerber, componenti SMD.
+
+Aggiornare glossario in `docs/program/domain-model.md` per ogni nuovo concetto.

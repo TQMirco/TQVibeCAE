@@ -1,0 +1,60 @@
+---
+description: Conventional Commits — format, scope, breaking changes, test obbligatori su fix
+alwaysApply: false
+---
+
+# Git — Conventional Commits
+
+## Formato
+
+```
+<type>(<scope>): <imperative summary ≤72 chars>
+
+[corpo opzionale in italiano]
+
+[footer: BREAKING CHANGE: ... | Refs #123]
+```
+
+Subject in **inglese** (imperativo). Corpo può essere in italiano.
+
+## Types
+
+| Type | Uso |
+|------|-----|
+| `feat` | Nuova funzionalità |
+| `fix` | Bug fix (+ test regressione) |
+| `docs` | Solo documentazione |
+| `test` | Solo test |
+| `refactor` | Refactor senza cambio comportamento |
+| `chore` | Manutenzione |
+| `build` | Build / dipendenze |
+| `ci` | CI/CD |
+
+## Scopes esempio
+
+`model`, `view`, `viewmodel`, `commands`, `services`, `docs`, `ai`, `tooling`
+
+## Regole
+
+- Un commit = un intento logico
+- `BREAKING CHANGE:` nel footer se si rompe serializzazione o API interna (OK in fase embrionale)
+- Bugfix **deve** includere test in `tests/regression/` nello stesso commit o commit `test` immediatamente precedente
+- Non committare: `.env`, segreti, `.venv`, cache, artefatti build
+- Non proporre commit che falliscono pre-commit
+- **Non** creare commit senza richiesta esplicita dell'utente
+
+## Esempi
+
+```
+feat(model): add Conductor entity with validation
+
+fix(commands): restore state after undo on delete symbol
+
+Refs regression test tests/regression/test_issue_undo_delete.py
+```
+
+```
+refactor(model)!: rename Wire to Conductor
+
+BREAKING CHANGE: schema field wire_id renamed to conductor_id
+```

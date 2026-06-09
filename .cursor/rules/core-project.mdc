@@ -1,0 +1,40 @@
+---
+description: Standard universali TQVibeCAE — lingua, stack, policy breaking changes
+alwaysApply: true
+---
+
+# TQVibeCAE — Core
+
+Progetto: CAD **elettrico** open source (PySide6 + Python 3.12+). Fase embrionale.
+
+## Lingua
+
+- Codice, identificatori, commenti inline: **inglese**
+- Docstring Google, `docs/program/`, `docs/user manual/`: **italiano**
+
+## Policy
+
+- **Breaking changes ammessi** — preferire pulizia e correttezza a shim di retrocompatibilità
+- Diff minimi ma corretti; non aggiungere feature non richieste
+- Non creare commit git senza richiesta esplicita dell'utente
+- Non usare `git commit --no-verify` salvo richiesta esplicita
+
+## Stack obbligatorio
+
+MVVM rigido | Pydantic v2 (Model) | pytest + Hypothesis | beartype + Pyright | Ruff | pre-commit
+
+## Dipendenze
+
+Ogni nuova dipendenza runtime o dev → documentare in `docs/program/dependencies.md`.
+
+## Dove mettere il codice
+
+| Layer | Path |
+|-------|------|
+| Model | `src/tqvibecae/model/` |
+| ViewModel | `src/tqvibecae/viewmodel/` |
+| View | `src/tqvibecae/view/` |
+| Commands | `src/tqvibecae/commands/` |
+| Services | `src/tqvibecae/services/` |
+
+Consultare le regole scoped prima di modificare un layer (vedi `AGENTS.md`).

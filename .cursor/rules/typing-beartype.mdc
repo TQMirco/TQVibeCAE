@@ -1,0 +1,68 @@
+---
+description: Type hints obbligatori — beartype runtime + Pyright statico
+globs: **/*.py
+alwaysApply: false
+---
+
+# Typing — Pydantic + beartype + Pyright
+
+## Divisione ruoli
+
+| Strumento | Dove | Ruolo |
+|-----------|------|--------|
+| **Pydantic v2** | `model/`, payload `commands/` | Validazione dati, JSON, JSON Schema |
+| **beartype** | `commands/`, `services/`, ViewModel | Type check runtime su funzioni/metodi |
+| **Pyright** | Tutto | Analisi statica (strict progressivo) |
+
+Non duplicare: validazione **campi entità** → Pydantic; **logica procedurale** → beartype.
+
+## Stack
+
+| Strumento | Ruolo |
+|-----------|--------|
+| **beartype** | Runtime sul package `tqvibecae` |
+| **Pyright** | Analisi statica (strict progressivo) |
+
+## Setup beartype
+
+In `src/tqvibecae/__init__.py` (quando il package esiste):
+
+```python
+from beartype.claw import beartype_this_package
+
+beartype_this_package()
+```
+
+## Regole
+
+- `from __future__ import annotations` in ogni modulo
+- Type hint su **tutto** il codice pubblico (parametri, return, attributi pubblici)
+- Preferire `Protocol`, `TypedDict`, `NewType`, `Literal`, `Enum` a `Any`
+- `Any` solo con giustificazione in ADR o commento esplicito
+- Deserializzazione JSON → `Model.model_validate()` (Pydantic), non `@beartype` sul parsing
+- `@beartype` esplicito su `CommandBus.execute`, servizi I/O, adapter AI
+
+## Pyright
+
+- Config in `pyproject.toml` `[tool.pyright]` o `pyrightconfig.json`
+- Mode `strict` progressivo: partire da `model/` e `commands/`
+- Zero errori Pyright prima di proporre commit
+
+## ViewModel / Qt
+
+Tipizzare payload Signal dove PySide6 lo consente.
+Per slot Qt legacy senza tipi → wrapper tipizzato nel ViewModel.
+
+```python
+# GOOD
+def execute(self, command: Command) -> CommandResult:
+    ...
+
+# BAD
+def execute(self, command):  # noqa: missing type hints
+    ...
+```
+
+## Test
+
+I test devono rispettare gli stessi hint; usare fixture tipizzate.

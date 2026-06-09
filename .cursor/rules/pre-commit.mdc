@@ -1,0 +1,52 @@
+---
+description: Hook pre-commit obbligatori — Ruff, Pyright, igiene file, pytest pre-push
+globs: .pre-commit-config.yaml,pyproject.toml
+alwaysApply: false
+---
+
+# pre-commit
+
+Gate locale obbligatorio, allineato a CI futura.
+
+## Setup (una tantum)
+
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit install --hook-type pre-push
+```
+
+## Hook configurati
+
+| Hook | Stage | Scopo |
+|------|-------|-------|
+| ruff-check + ruff-format | pre-commit | Lint e format |
+| pyright (`python -m pyright`) | pre-commit | Type check statico |
+| trailing-whitespace, end-of-file-fixer | pre-commit | Igiene file |
+| check-yaml, check-toml | pre-commit | Config valida |
+| check-added-large-files | pre-commit | No binari pesanti |
+| pytest (subset veloce) | pre-push | Test unit rapidi |
+
+Test Hypothesis completi: **pre-push** o CI, non pre-commit (tempi).
+
+## Regole agent
+
+- **Non** proporre commit che fallirebbero `pre-commit run --all-files`
+- **Non** usare `--no-verify` salvo richiesta esplicita utente
+- Se un hook fallisce → correggere, non disabilitare l'hook
+- Aggiornamento hook: `pre-commit autoupdate` (documentare in `dependencies.md`)
+
+## Verifica locale
+
+```bash
+pre-commit run --all-files
+pre-commit run --hook-stage pre-push --all-files
+```
+
+## Fallimento comune
+
+| Errore | Fix |
+|--------|-----|
+| Ruff format | `ruff format .` |
+| Pyright | correggere tipi, non `@ignore` globale |
+| pytest pre-push | aggiungere/correggere test |

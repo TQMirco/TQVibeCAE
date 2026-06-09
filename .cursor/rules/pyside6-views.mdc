@@ -1,0 +1,52 @@
+---
+description: View PySide6 passive — widget sottili, niente business logic
+globs: src/**/view/**/*.py,src/**/views/**/*.py
+alwaysApply: false
+---
+
+# PySide6 Views
+
+## Principio
+
+La View è **passiva**: mostra stato e inoltra input. Zero business logic.
+
+## Struttura file
+
+- Widget sottile: file `.ui` (opzionale) + sottoclasse minima
+- Binding solo verso ViewModel (property, segnali)
+- **Mai** chiamare metodi mutanti sul Model dalla View
+
+```python
+# BAD — View modifica il dominio
+self._project.add_conductor(conductor)
+
+# GOOD — View notifica il ViewModel
+self.viewmodel.request_add_conductor(conductor_id)
+```
+
+## Canvas / disegno CAD
+
+Logica di rendering e hit-test complessi → `services/rendering` o helper nel ViewModel.
+Il widget limita paint event e delega.
+
+## Segnali tipizzati
+
+Payload dei segnali View → ViewModel: tipi concreti, non `object` generico.
+
+```python
+# BAD
+conductor_selected = Signal(object)
+
+# GOOD
+conductor_selected = Signal(UUID)
+```
+
+## Test
+
+- Logica critica: test in Model / ViewModel (pytest puro)
+- View: solo smoke/integration con pytest-qt
+- **Non** usare Hypothesis su test GUI
+
+## Qt Designer
+
+Se si usa `.ui`, generare o mantenere binding esplicito nel ViewModel — niente logica negli slot auto-generati oltre al forward verso ViewModel.

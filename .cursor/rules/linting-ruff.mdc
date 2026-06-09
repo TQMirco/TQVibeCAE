@@ -1,0 +1,50 @@
+---
+description: Ruff lint e format — unico tool stile codice Python
+globs: **/*.py,pyproject.toml
+alwaysApply: false
+---
+
+# Ruff — Lint e Format
+
+Ruff sostituisce black, isort, flake8. Config in `pyproject.toml`.
+
+## Comandi
+
+```bash
+ruff check .
+ruff check --fix .
+ruff format .
+ruff format --check .
+```
+
+L'agent deve eseguire `ruff check` e `ruff format --check` dopo modifiche Python rilevanti.
+
+## Config attesa
+
+- `line-length = 88`
+- `target-version = "py312"`
+- `quote-style = double`
+- Lint: `E`, `F`, `I`, `UP`, `B`, `SIM`, `RUF`
+- `known-first-party = ["tqvibecae"]`
+
+## Import order
+
+1. stdlib
+2. third-party
+3. `tqvibecae`
+
+Ruff isort gestisce l'ordine — non ordinare manualmente in conflitto.
+
+## noqa
+
+`# noqa: XXX` solo con motivazione breve inline o in ADR.
+Preferire fix del codice a silenziare regole.
+
+## PySide6
+
+Falsi positivi Qt documentati in ADR se ricorrenti.
+Non disabilitare intere categorie Ruff globalmente.
+
+## Pre-commit
+
+Ruff è enforced da pre-commit — codice non formattato non va committato.

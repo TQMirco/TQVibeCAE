@@ -1,0 +1,59 @@
+---
+description: Documentazione italiana — docstring Google, docs/program, docs/user manual
+globs: **/*.py,docs/**/*
+alwaysApply: false
+---
+
+# Documentazione
+
+## Tre livelli
+
+| Livello | Dove | Lingua | Contenuto |
+|---------|------|--------|-----------|
+| API inline | docstring | IT | Contratto funzione/classe |
+| Sviluppatore | `docs/program/` | IT | Architettura, ADR, scelte tecniche |
+| Operatore | `docs/user manual/` | IT | Pulsanti, parametri, workflow |
+
+## Docstring — Google style, italiano
+
+Obbligatorie su tutto il codice **pubblico** (moduli, classi, funzioni/metodi public).
+
+```python
+def add_conductor(self, conductor: Conductor) -> None:
+    """Aggiunge un conduttore al progetto.
+
+    Args:
+        conductor: Conduttore validato da inserire nello schema.
+
+    Raises:
+        ValidationError: Se il conduttore viola invarianti del progetto.
+    """
+```
+
+Sezioni: `Args`, `Returns`, `Raises`, `Yields`, `Note` — solo se pertinenti.
+
+## Regole agent
+
+| Modifica | Aggiornare |
+|----------|------------|
+| UX (pulsanti, dialog, workflow) | `docs/user manual/` |
+| Scelta architetturale | ADR in `docs/program/adr/` |
+| Model / entità nuove | `docs/program/domain-model.md` |
+| Tooling / CI | `docs/program/tooling.md` |
+| Nuova dipendenza | `docs/program/dependencies.md` |
+
+## ADR
+
+Nome file: `adr-NNN-titolo-breve.md` (es. `adr-001-schema-versioning.md`).
+Template: `docs/program/adr/000-template.md`.
+
+## User manual
+
+Linguaggio per operatore non programmatore.
+Spiegare **cosa fa** e **come usarlo**, non implementazione interna.
+
+## Non duplicare
+
+Docstring = contratto API.
+`docs/program/` = perché e come è architettato.
+Evitare copy-paste identico tra docstring e markdown.

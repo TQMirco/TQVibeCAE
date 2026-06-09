@@ -1,0 +1,54 @@
+---
+description: Dominio CAD elettrico (impianti) — IEC/CEI, non elettronica/PCB
+alwaysApply: false
+---
+
+# CAD Elettrico — Vincoli dominio
+
+TQVibeCAE modella **impianti elettrici**, non circuiti elettronici.
+
+## In scope
+
+- Quadri elettrici, protezioni (MCB, RCD, fusibili)
+- Conduttori, sezioni (mm²), correnti (A), potenze (W)
+- Morsettiere, borniere, collegamenti
+- Schemi unifilari / multifilari
+- Simbologia IEC / CEI
+- Numerazione fili, riferimenti incrociati tra fogli
+
+## Out of scope
+
+- PCB layout, routing SMD, footprint
+- Netlist SPICE, simulazione analogica digitale
+- Gerber, pick-and-place, BOM elettronica
+- Componenti passivi discreti (R, C, L) come in schema elettronico
+
+## Unità
+
+Usare SI in modo coerente nel Model:
+
+| Grandezza | Unità |
+|-----------|-------|
+| Corrente | A |
+| Tensione | V |
+| Potenza | W |
+| Sezione cavo | mm² |
+| Temperatura | °C |
+
+## Estensione concetti
+
+Prima di introdurre un nuovo tipo simbolo o entità:
+
+1. Verificare che sia **elettrotecnica impiantistica**, non elettronica
+2. Aggiornare glossario in `docs/program/domain-model.md`
+3. Aggiungere test (esplicito + round-trip Hypothesis se serializzabile)
+
+## Esempi naming entità
+
+```python
+# GOOD
+CircuitBreaker, TerminalBlock, Conductor, PanelBoard
+
+# BAD (dominio elettronico)
+CapacitorSMD, NetlistNode, Footprint, SpiceModel
+```

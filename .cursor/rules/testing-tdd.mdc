@@ -1,0 +1,82 @@
+---
+description: TDD con pytest, Hypothesis property-based, test di regressione bug
+globs: tests/**/*.py,src/**/*.py
+alwaysApply: false
+---
+
+# Testing — TDD e Hypothesis
+
+## Stack
+
+- **pytest** — test principali
+- **pytest-qt** — solo integration/smoke View
+- **Hypothesis** — property-based su Model, commands, serializzazione
+
+## TDD (default per Model, commands, validazione)
+
+1. Scrivere test che descrive il comportamento atteso
+2. Implementare fino al verde
+3. Refactor
+
+**Vietato** adattare il test per far passare codice sbagliato.
+Se il requisito cambia → aggiornare test **e** documentazione.
+
+## Regressione bug
+
+Ogni bug verificato → `tests/regression/test_issue_<slug>.py` con commento che riproduce il bug.
+
+## Copertura mirata
+
+| Layer | Priorità test |
+|-------|---------------|
+| Model, commands | Alta (unit + Hypothesis) |
+| ViewModel | Media (unit, mock Model) |
+| View | Bassa (integration smoke) |
+
+Fixture realistiche: progetto piccolo (quadro + 2 circuiti).
+
+## Hypothesis — obbligatorio per
+
+| Area | Proprietà esempio |
+|------|-------------------|
+| Serializzazione | `model_validate(model_dump(mode="json")) == x` |
+| Validazione | dict invalidi → `ValidationError` (Pydantic) |
+| Commands | sequenza undo/redo reversibile |
+| Migrazioni schema | dati essenziali non persi |
+
+## Regole Hypothesis
+
+- Strategie in `tests/strategies/` (es. `project_strategies.py`)
+- `@settings(max_examples=200)` su proprietà critiche
+- `assume()` per precondizioni reali, non per mascherare bug
+- `@example()` per edge case IEC e regressioni note
+- **Non** Hypothesis su test GUI pytest-qt
+- CI: `--hypothesis-profile=ci` + `HYPOTHESIS_SEED` deterministico
+
+## Esempi
+
+```python
+from pydantic import ValidationError
+
+# TDD esplicito
+def test_conductor_rejects_zero_cross_section() -> None:
+    with pytest.raises(ValidationError):
+        Conductor(cross_section_mm2=0)
+
+
+# Property-based (Pydantic round-trip JSON)
+from hypothesis import given, settings
+from tests.strategies.project_strategies import valid_projects
+
+@given(project=valid_projects())
+@settings(max_examples=100)
+def test_project_json_roundtrip(project: Project) -> None:
+    data = project.model_dump(mode="json")
+    restored = Project.model_validate(data)
+    assert restored == project
+```
+
+## Gate qualità
+
+- Pre-commit: subset veloce (vedi `pre-commit.mdc`)
+- Pre-push / CI: suite completa pytest + profilo Hypothesis CI

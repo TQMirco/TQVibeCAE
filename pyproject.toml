@@ -1,0 +1,67 @@
+[project]
+name = "tqvibecae"
+version = "0.0.0"
+description = "CAD elettrico open source"
+readme = "AGENTS.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "TQVibeCAE Contributors" }]
+
+dependencies = [
+    "PySide6>=6.6",
+    "pydantic>=2.0",
+    "beartype>=0.18",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-qt>=4.4",
+    "hypothesis>=6.100",
+    "pyright>=1.1.380",
+    "ruff>=0.8",
+    "pre-commit>=4.0",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra -q"
+markers = [
+    "qt: test che richiede PySide6 (pytest-qt)",
+    "slow: test lenti (Hypothesis esteso)",
+]
+
+[tool.hypothesis]
+profiles.ci.max_examples = 50
+profiles.ci.derandomize = true
+profiles.dev.max_examples = 200
+
+[tool.pyright]
+include = ["src", "tests"]
+exclude = ["**/__pycache__", ".venv"]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["tqvibecae"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
