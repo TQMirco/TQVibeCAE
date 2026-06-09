@@ -6,13 +6,14 @@ alwaysApply: false
 
 # Documentazione
 
-## Tre livelli
+## Quattro livelli documentali
 
 | Livello | Dove | Lingua | Contenuto |
 |---------|------|--------|-----------|
 | API inline | docstring | IT | Contratto funzione/classe |
-| Sviluppatore | `docs/program/` | IT | Architettura, ADR, scelte tecniche |
-| Operatore | `docs/user manual/` | IT | Pulsanti, parametri, workflow |
+| Sviluppatore | `docs/program/` | IT | Architettura, ADR, scelte tecniche **integrate** |
+| Operatore | `docs/user manual/` | IT | Pulsanti, parametri, workflow **rilasciati** |
+| Idee / futuro | `docs/idea/` | IT | Nuovi sviluppi, discussioni, cose non integrate, brainstorming |
 
 ## Docstring — Google style, italiano
 
@@ -36,11 +37,20 @@ Sezioni: `Args`, `Returns`, `Raises`, `Yields`, `Note` — solo se pertinenti.
 
 | Modifica | Aggiornare |
 |----------|------------|
-| UX (pulsanti, dialog, workflow) | `docs/user manual/` |
-| Scelta architetturale | ADR in `docs/program/adr/` |
-| Model / entità nuove | `docs/program/domain-model.md` |
+| UX (pulsanti, dialog, workflow) **rilasciata** | `docs/user manual/` |
+| Scelta architetturale **decisa** | ADR in `docs/program/adr/` |
+| Model / entità **in produzione** | `docs/program/domain-model.md` |
 | Tooling / CI | `docs/program/tooling.md` |
 | Nuova dipendenza | `docs/program/dependencies.md` |
+| Nuovo sviluppo, idea, discussione **non integrata** | `docs/idea/` |
+| Regole Cursor (`.cursor/rules/*.mdc`) | seguire `cursor-rules-authoring` |
+
+## docs/idea/
+
+**Tutte** le richieste di documentazione per: nuovi sviluppi futuri, discussioni generali, funzionalità non ancora in codice, idee e ipotesi → **`docs/idea/`**.
+
+Non usare `docs/program/` per bozze esplorative; promuovere in ADR solo quando la decisione è presa.
+Vedi [`docs/idea/README.md`](docs/idea/README.md).
 
 ## ADR
 

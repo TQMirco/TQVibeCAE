@@ -16,7 +16,7 @@ CAD elettrico open source (impianti, quadri, schemi unifilari/multifilari).
 ## Lingua
 
 - Codice, identificatori, commenti inline: **inglese**
-- Docstring Google, `docs/program/`, `docs/user manual/`: **italiano**
+- Docstring Google, `docs/program/`, `docs/user manual/`, `docs/idea/`: **italiano**
 
 ## Layout repository
 
@@ -33,8 +33,9 @@ tests/
   regression/
   strategies/     # strategie Hypothesis
 docs/
-  program/        # architettura, ADR, scelte tecniche
+  program/        # architettura, ADR, scelte tecniche integrate
   user manual/    # guida operatore
+  idea/           # idee, discussioni, sviluppi non ancora integrati
 .cursor/rules/    # regole Cursor (.mdc)
 ```
 
@@ -49,6 +50,7 @@ docs/
 | Tipi | `typing-beartype` |
 | Lint/format | `linting-ruff`, `pre-commit` |
 | Documentazione | `documentation-it` |
+| Scrivere/modificare regole Cursor | `cursor-rules-authoring` |
 | Automazioni AI | `ai-first-design` |
 | Commit | `git-commits` |
 | Concetti elettrici | `electrical-cad-domain` |
@@ -77,6 +79,9 @@ pre-commit install --hook-type pre-push
 
 ## Documentazione
 
-- Sviluppatori: `docs/program/`
-- Operatore: `docs/user manual/`
-- Nuova dipendenza: aggiornare `docs/program/dependencies.md`
+| Cartella | Contenuto |
+|----------|-----------|
+| `docs/program/` | Architettura e decisioni **integrate** |
+| `docs/user manual/` | Guida operatore (funzionalità **rilasciate**) |
+| `docs/idea/` | **Idee, discussioni, nuovi sviluppi non integrati** — tutta la doc esplorativa va qui |
+| `docs/program/dependencies.md` | Nuove dipendenze |

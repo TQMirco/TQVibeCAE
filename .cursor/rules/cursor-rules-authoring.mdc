@@ -1,0 +1,103 @@
+---
+description: Best practice per creare e modificare regole Cursor (.mdc) in questo progetto
+globs: .cursor/rules/**/*.mdc,AGENTS.md
+alwaysApply: false
+---
+
+# Scrivere regole Cursor
+
+Applica questa guida quando crei o modifichi file in `.cursor/rules/` o `AGENTS.md`.
+
+## Formato obbligatorio
+
+- **Solo** `.cursor/rules/*.mdc` — **non** usare `.cursorrules` (legacy)
+- Frontmatter YAML tra `---` all'inizio; senza frontmatter la regola può non caricarsi
+
+```markdown
+---
+description: Una frase chiara — compare nel rule picker e guida l'agent
+globs: path/pattern
+alwaysApply: false
+---
+
+# Titolo regola
+
+Contenuto...
+```
+
+| Campo | Uso |
+|-------|-----|
+| `description` | Obbligatorio; frase specifica, non generica |
+| `globs` | Pattern file per auto-attach; glob più stretto possibile |
+| `alwaysApply` | `true` solo per regole universali **brevi** |
+
+## Quattro modalità di attivazione
+
+| Modalità | Config | Quando |
+|----------|--------|--------|
+| Always | `alwaysApply: true` | Solo standard universali (~≤40 righe) |
+| Auto-attached | `globs: "..."` | Regole per layer/path (es. `src/**/model/**`) |
+| Agent-decided | `description` ricca, `alwaysApply: false`, no globs | Procedure occasionali (commit, dominio) |
+| Manual | stesso senza globs | @mention esplicita |
+
+**Regola d'oro:** la modalità più **narrow** che copre sempre il caso d'uso. Evitare `alwaysApply: true` salvo `core-project.mdc`.
+
+## Contenuto efficace
+
+```markdown
+# ❌ BAD — vago, non verificabile
+Scrivi codice pulito e ben testato.
+
+# ✅ GOOD — specifico, verificabile
+Prima del commit: `ruff check .` e `ruff format --check .`.
+Ogni bugfix include un test in `tests/regression/test_issue_<slug>.py`.
+```
+
+- **Una preoccupazione per file** — non monoliti
+- **Target 50–200 righe**; max assoluto ~500
+- Istruzioni **azione + criterio** (comandi, path, pattern naming)
+- Esempi ✅/❌ dove aiutano
+- Italiano (come resto doc progetto), salvo identificatori/codice
+
+## Cosa non mettere nelle regole
+
+- Tutorial lunghi → `docs/program/` o `docs/idea/`
+- Duplicare `AGENTS.md` → AGENTS = mappa/indice; regole = vincoli operativi
+- Policy già in User Rules Cursor globali, salvo override progetto
+- Liste infinite di edge case → estrarre in doc e linkare
+
+## Naming file
+
+- kebab-case: `domain-model.mdc`, `testing-tdd.mdc`
+- Nome = argomento singolo
+- Nuova area significativa → nuovo file, non append al monolite
+
+## Quando aggiungere una regola
+
+Aggiungi o estendi una regola solo se:
+
+1. L'agent **ripete lo stesso errore** in sessioni diverse, oppure
+2. È un vincolo **non negoziabile** del progetto (architettura, lingua, tooling)
+
+Altrimenti documenta in `docs/program/` o `docs/idea/`.
+
+## Checklist nuova/modifica regola
+
+- [ ] File `.mdc` in `.cursor/rules/`
+- [ ] Frontmatter valido (`description` + `alwaysApply` o `globs`)
+- [ ] Una sola preoccupazione per file
+- [ ] Sotto ~200 righe (idealmente)
+- [ ] Esempi concreti dove utile
+- [ ] Aggiornato `AGENTS.md` (tabella regole / layout) se cambia l'organizzazione
+- [ ] Nessuna duplicazione sostanziale con regole esistenti
+
+## Struttura attuale TQVibeCAE (riferimento)
+
+| Regola | Attivazione |
+|--------|-------------|
+| `core-project` | always |
+| `architecture-mvvm`, `domain-model`, `pyside6-views`, … | globs per path |
+| `ai-first-design`, `git-commits`, `electrical-cad-domain` | agent-decided |
+| `cursor-rules-authoring` | globs su `.cursor/rules/**`, `AGENTS.md` |
+
+Non creare secondo file `alwaysApply: true` senza ADR o discussione esplicita.

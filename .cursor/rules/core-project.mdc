@@ -10,7 +10,8 @@ Progetto: CAD **elettrico** open source (PySide6 + Python 3.12+). Fase embrional
 ## Lingua
 
 - Codice, identificatori, commenti inline: **inglese**
-- Docstring Google, `docs/program/`, `docs/user manual/`: **italiano**
+- Docstring Google, `docs/program/`, `docs/user manual/`, `docs/idea/`: **italiano**
+- Doc esplorativa (idee, discussioni, sviluppi non integrati): **`docs/idea/`**
 
 ## Policy
 

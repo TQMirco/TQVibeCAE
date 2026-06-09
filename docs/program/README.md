@@ -14,6 +14,10 @@ Indice della documentazione tecnica del progetto (lingua: **italiano**).
 | [dependencies.md](dependencies.md) | Dipendenze runtime e dev |
 | [adr/001-pydantic-domain-models.md](adr/001-pydantic-domain-models.md) | Pydantic v2 per Model e JSON Schema |
 
+## Idee e sviluppi futuri
+
+Bozze, discussioni e funzionalità **non ancora integrate** → [`docs/idea/`](../idea/) (non in questa cartella).
+
 ## Schema JSON
 
 Contratti machine-readable in [schemas/](schemas/).
