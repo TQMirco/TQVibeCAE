@@ -13,6 +13,15 @@ Cartella per tutto ciò che **non è ancora integrato** nel prodotto o nella doc
 
 **Lingua:** italiano (come il resto della documentazione non-code).
 
+## Indice documenti
+
+| Documento | Contenuto |
+|-----------|-----------|
+| [electrical-cad-design-considerations.md](electrical-cad-design-considerations.md) | Casistiche e trappole di dominio (17 sezioni) |
+| [data-model-specification.md](data-model-specification.md) | Specifica data model — entità, persistenza, undo, settings, import, **grafica componibile §5.1**, **media §5.2** |
+| [import-eplan-mapping-notes.md](import-eplan-mapping-notes.md) | Mapping EPLAN → modello TQVibeCAE |
+| [data-model-open-questions.md](data-model-open-questions.md) | Decisioni aperte da review |
+
 ## Cosa non va qui
 
 | Contenuto | Dove metterlo |
