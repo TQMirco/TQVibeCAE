@@ -1,0 +1,20 @@
+"""Registry costanti entity_type per entità dominio."""
+
+from __future__ import annotations
+
+DEVICE = "device"
+SUB_COMPONENT = "sub_component"
+SCHEMATIC_FRAGMENT = "schematic_fragment"
+CONNECTION_POINT = "connection_point"
+NET = "net"
+CABLE = "cable"
+CORE = "core"
+GRAPHIC_CELL = "graphic_cell"
+SYMBOL_GRAPHIC_COMPOSITION = "symbol_graphic_composition"
+SYMBOL_DEFINITION = "symbol_definition"
+COMPONENT_DEFINITION = "component_definition"
+PART_NUMBER = "part_number"
+FOOTPRINT_DEFINITION = "footprint_definition"
+MEDIA_ATTACHMENT = "media_attachment"
+PROJECT = "project"
+SHEET = "sheet"

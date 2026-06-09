@@ -6,57 +6,50 @@
 
 CAD **elettrico** (impianti, quadri). Non elettronica / PCB.
 
-## Entità base (pianificate)
+## Entità implementate (MVP)
 
 | Entità | Descrizione |
 |--------|-------------|
-| `Project` | Root documento; `schema_version`, metadati |
-| `Drawing` | Foglio schema (unifilare/multifilare) |
-| `SymbolInstance` | Istanza simbolo su foglio |
-| `Conductor` | Conduttore semantico (sezione, identificazione filo) |
-| `Connection` | Collegamento tra morsetti/nodi |
-| `Terminal` | Morsetto / punto di connessione |
-| `PanelBoard` | Quadro elettrico |
+| `Project` / `ProjectDocument` | Root progetto e container in-memory |
+| `ProjectIndex` | Indice denormalizzato device/net/designation |
+| `ProjectManifest` | Contratto manifest `.tqvibe/` |
+| `Sheet` | Foglio schema |
+| `Device` / `SubComponent` | Identità canonica e parti fisiche |
+| `SchematicFragment` | Apparizione device su foglio |
+| `ConnectionPoint` / `Net` | Grafo topologico |
+| `Cable` / `Core` | Cavi e anime |
+| `PotentialAssignment` / `GlobalNetDeclaration` | Potenziali |
+| `SymbolGraphic` / `PlacedSymbol` | Presentation simbolo |
+| `WireGraphic` / `WireSegment` | Presentation filo canvas |
+| `SheetPresentation` | Stato grafico foglio |
+| `GraphicCellDefinition` / `SymbolGraphicComposition` | Grafica componibile |
+| `SymbolDefinition` / `ComponentDefinition` / `PartNumber` / `FootprintDefinition` | Catalogo libreria |
+| `ApplicationSettings` / `UserWorkspaceState` / `NumberingScheme` | Settings 3 livelli |
+| `Command` / `CommandBus` / `UndoManager` | Sessione undo |
 
-## Identità
+## Semantica vs presentazione
 
-- `id: UUID` immutabile per ogni entità
-- `entity_type: str` per registry estensibile
-- Campi semantici AI: `human_label`, `tags`, `role`
+| Dominio | Presentation |
+|---------|--------------|
+| `Device` + `ConnectionPoint` | `PlacedSymbol` + pin canvas |
+| `Net` | `WireGraphic` (disegno) |
+| `Cable` / `Core` | futuro `WireGraphic` multisegmento |
 
 ## Grafo
 
 ```
-Nodi: SymbolInstance, Terminal, Bus
-Archi: Connection, Conductor
+Nodi: Device, ConnectionPoint, Terminal (v1)
+Archi: Net, Cable/Core
 ```
 
-Netlist e validazione derivano dal grafo, non dalla grafica.
+## Serializzazione
 
-## Semantica vs presentazione
-
-| Dominio | Presentazione (View) |
-|---------|----------------------|
-| `Conductor` | `WireGraphic` |
-| `SymbolRef` | disegno simbolo su canvas |
-
-## Serializzazione — Pydantic v2
-
-Tutte le entità dominio e i payload Command sono `pydantic.BaseModel`.
-
-- JSON: `model_dump(mode="json")` / `model_validate(data)`
-- JSON Schema per AI: `model_json_schema()` → file in [schemas/](schemas/)
-- Modelli immutabili: `model_config = ConfigDict(frozen=True)`
-- Union polimorfiche: `discriminator="entity_type"`
+Pydantic v2 — `model_dump(mode="json")` / JSON Schema in [`schemas/`](schemas/).
 
 Vedi [adr/001-pydantic-domain-models.md](adr/001-pydantic-domain-models.md).
 
-## Unità SI
+## Catalogo IEC editor
 
-A, V, W, mm², °C — coerenti in tutto il Model.
+Categorie palette: protection, switching, control, loads, terminals, reference, measurement, transformers — vedi `resources/iec_catalog/`.
 
-## Estensione
-
-Nuovi tipi simbolo → registry `SymbolDefinition`, non fork classi base.
-
-Vedi ADR e regola Cursor `domain-model`.
+Geometria simboli allineata a **IEC 60617** / **CEI 3-7** (contatti in stato a riposo, bobina rettangolare, motore U/V/W+PE, terra PE, ecc.) — riferimento [`guida-progettazione-schema-elettrico.md`](../idea/guida-progettazione-schema-elettrico.md).

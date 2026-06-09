@@ -1,0 +1,217 @@
+{
+  "$defs": {
+    "CatalogReference": {
+      "description": "Puntatore versionato a una definizione in libreria.",
+      "properties": {
+        "definition_id": {
+          "format": "uuid",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "definition_version": {
+          "title": "Definition Version",
+          "type": "integer"
+        },
+        "catalog_kind": {
+          "enum": [
+            "component",
+            "symbol",
+            "part",
+            "footprint",
+            "graphic_cell",
+            "graphic_composition"
+          ],
+          "title": "Catalog Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition_id",
+        "definition_version",
+        "catalog_kind"
+      ],
+      "title": "CatalogReference",
+      "type": "object"
+    },
+    "PlacedSymbol": {
+      "description": "Simbolo posizionato sul foglio con link al dominio.",
+      "properties": {
+        "instance_id": {
+          "format": "uuid",
+          "title": "Instance Id",
+          "type": "string"
+        },
+        "device_id": {
+          "format": "uuid",
+          "title": "Device Id",
+          "type": "string"
+        },
+        "fragment_id": {
+          "format": "uuid",
+          "title": "Fragment Id",
+          "type": "string"
+        },
+        "composition_ref": {
+          "$ref": "#/$defs/CatalogReference"
+        },
+        "x_mm": {
+          "default": 0.0,
+          "title": "X Mm",
+          "type": "number"
+        },
+        "y_mm": {
+          "default": 0.0,
+          "title": "Y Mm",
+          "type": "number"
+        },
+        "rotate_deg": {
+          "default": 0.0,
+          "title": "Rotate Deg",
+          "type": "number"
+        },
+        "designation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Designation"
+        }
+      },
+      "required": [
+        "instance_id",
+        "device_id",
+        "fragment_id",
+        "composition_ref"
+      ],
+      "title": "PlacedSymbol",
+      "type": "object"
+    },
+    "WireGraphic": {
+      "description": "Conduttore presentation — disegno canvas, non topologia Net.",
+      "properties": {
+        "wire_id": {
+          "format": "uuid",
+          "title": "Wire Id",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "$ref": "#/$defs/WireSegment"
+          },
+          "title": "Segments",
+          "type": "array"
+        },
+        "wire_kind": {
+          "$ref": "#/$defs/WireKind",
+          "default": "control"
+        },
+        "from_pin_ref": {
+          "title": "From Pin Ref",
+          "type": "string"
+        },
+        "to_pin_ref": {
+          "title": "To Pin Ref",
+          "type": "string"
+        },
+        "net_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Net Id"
+        }
+      },
+      "required": [
+        "wire_id",
+        "segments",
+        "from_pin_ref",
+        "to_pin_ref"
+      ],
+      "title": "WireGraphic",
+      "type": "object"
+    },
+    "WireKind": {
+      "description": "Tipo visivo conduttore su canvas.",
+      "enum": [
+        "control",
+        "power",
+        "pe"
+      ],
+      "title": "WireKind",
+      "type": "string"
+    },
+    "WireSegment": {
+      "description": "Segmento ortogonale di un filo (mm).",
+      "properties": {
+        "x1_mm": {
+          "title": "X1 Mm",
+          "type": "number"
+        },
+        "y1_mm": {
+          "title": "Y1 Mm",
+          "type": "number"
+        },
+        "x2_mm": {
+          "title": "X2 Mm",
+          "type": "number"
+        },
+        "y2_mm": {
+          "title": "Y2 Mm",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x1_mm",
+        "y1_mm",
+        "x2_mm",
+        "y2_mm"
+      ],
+      "title": "WireSegment",
+      "type": "object"
+    }
+  },
+  "description": "Stato grafico di un foglio per rendering canvas.",
+  "properties": {
+    "sheet_id": {
+      "format": "uuid",
+      "title": "Sheet Id",
+      "type": "string"
+    },
+    "symbols": {
+      "items": {
+        "$ref": "#/$defs/PlacedSymbol"
+      },
+      "title": "Symbols",
+      "type": "array"
+    },
+    "wires": {
+      "items": {
+        "$ref": "#/$defs/WireGraphic"
+      },
+      "title": "Wires",
+      "type": "array"
+    },
+    "grid_mm": {
+      "default": 10.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Grid Mm",
+      "type": "number"
+    }
+  },
+  "required": [
+    "sheet_id"
+  ],
+  "title": "SheetPresentation",
+  "type": "object"
+}

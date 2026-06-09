@@ -1,0 +1,60 @@
+{
+  "description": "Insieme topologico di connection point connessi.",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "default": "net",
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "human_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Human Label"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Role"
+    },
+    "connection_point_ids": {
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "title": "Connection Point Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "title": "Net",
+  "type": "object"
+}

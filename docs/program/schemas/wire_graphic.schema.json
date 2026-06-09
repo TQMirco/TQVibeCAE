@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "WireKind": {
+      "description": "Tipo visivo conduttore su canvas.",
+      "enum": [
+        "control",
+        "power",
+        "pe"
+      ],
+      "title": "WireKind",
+      "type": "string"
+    },
+    "WireSegment": {
+      "description": "Segmento ortogonale di un filo (mm).",
+      "properties": {
+        "x1_mm": {
+          "title": "X1 Mm",
+          "type": "number"
+        },
+        "y1_mm": {
+          "title": "Y1 Mm",
+          "type": "number"
+        },
+        "x2_mm": {
+          "title": "X2 Mm",
+          "type": "number"
+        },
+        "y2_mm": {
+          "title": "Y2 Mm",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x1_mm",
+        "y1_mm",
+        "x2_mm",
+        "y2_mm"
+      ],
+      "title": "WireSegment",
+      "type": "object"
+    }
+  },
+  "description": "Conduttore presentation — disegno canvas, non topologia Net.",
+  "properties": {
+    "wire_id": {
+      "format": "uuid",
+      "title": "Wire Id",
+      "type": "string"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/WireSegment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "wire_kind": {
+      "$ref": "#/$defs/WireKind",
+      "default": "control"
+    },
+    "from_pin_ref": {
+      "title": "From Pin Ref",
+      "type": "string"
+    },
+    "to_pin_ref": {
+      "title": "To Pin Ref",
+      "type": "string"
+    },
+    "net_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Net Id"
+    }
+  },
+  "required": [
+    "wire_id",
+    "segments",
+    "from_pin_ref",
+    "to_pin_ref"
+  ],
+  "title": "WireGraphic",
+  "type": "object"
+}

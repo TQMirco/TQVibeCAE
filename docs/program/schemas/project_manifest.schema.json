@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "ShardRef": {
+      "description": "Riferimento a uno shard JSON del progetto.",
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum Sha256"
+        }
+      },
+      "required": [
+        "path",
+        "entity_type"
+      ],
+      "title": "ShardRef",
+      "type": "object"
+    }
+  },
+  "description": "Manifest root cartella .tqvibe/.",
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "project_id": {
+      "format": "uuid",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "shards": {
+      "items": {
+        "$ref": "#/$defs/ShardRef"
+      },
+      "title": "Shards",
+      "type": "array"
+    },
+    "saved_at": {
+      "format": "date-time",
+      "title": "Saved At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "saved_at"
+  ],
+  "title": "ProjectManifest",
+  "type": "object"
+}

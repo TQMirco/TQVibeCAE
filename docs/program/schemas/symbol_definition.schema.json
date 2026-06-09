@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "CatalogReference": {
+      "description": "Puntatore versionato a una definizione in libreria.",
+      "properties": {
+        "definition_id": {
+          "format": "uuid",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "definition_version": {
+          "title": "Definition Version",
+          "type": "integer"
+        },
+        "catalog_kind": {
+          "enum": [
+            "component",
+            "symbol",
+            "part",
+            "footprint",
+            "graphic_cell",
+            "graphic_composition"
+          ],
+          "title": "Catalog Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition_id",
+        "definition_version",
+        "catalog_kind"
+      ],
+      "title": "CatalogReference",
+      "type": "object"
+    },
+    "ConnectionPointTemplate": {
+      "description": "Template pin logico su SymbolDefinition.",
+      "properties": {
+        "pin_id": {
+          "title": "Pin Id",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "direction_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direction Deg"
+        }
+      },
+      "required": [
+        "pin_id"
+      ],
+      "title": "ConnectionPointTemplate",
+      "type": "object"
+    }
+  },
+  "description": "Funzione elettrica IEC con riferimento grafica componibile.",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "default": "symbol_definition",
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "human_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Human Label"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Role"
+    },
+    "function_class": {
+      "title": "Function Class",
+      "type": "string"
+    },
+    "graphic_composition_ref": {
+      "$ref": "#/$defs/CatalogReference"
+    },
+    "connection_points_template": {
+      "items": {
+        "$ref": "#/$defs/ConnectionPointTemplate"
+      },
+      "title": "Connection Points Template",
+      "type": "array"
+    },
+    "norm": {
+      "default": "IEC 60617",
+      "title": "Norm",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "function_class",
+    "graphic_composition_ref"
+  ],
+  "title": "SymbolDefinition",
+  "type": "object"
+}

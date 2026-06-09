@@ -1,0 +1,34 @@
+{
+  "description": "Indice denormalizzato per ricerche O(1).",
+  "properties": {
+    "device_to_sheets": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Device To Sheets",
+      "type": "object"
+    },
+    "designation_to_device": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Designation To Device",
+      "type": "object"
+    },
+    "net_to_devices": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Net To Devices",
+      "type": "object"
+    }
+  },
+  "title": "ProjectIndex",
+  "type": "object"
+}

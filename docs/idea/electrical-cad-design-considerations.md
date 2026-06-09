@@ -4,6 +4,8 @@ Documento di riferimento per lo sviluppo. Non è una specifica funzionale né un
 
 **Specifica derivata:** [data-model-specification.md](data-model-specification.md) — traduce queste considerazioni in entità, persistenza, undo, impostazioni e import (EPLAN, ecc.).
 
+**Guida progettista:** [guida-progettazione-schema-elettrico.md](guida-progettazione-schema-elettrico.md) — norme, best practice, checklist e tutorial schema (prospettiva operatore, non software).
+
 ---
 
 ## 1. Identità e rappresentazione multipla dei componenti

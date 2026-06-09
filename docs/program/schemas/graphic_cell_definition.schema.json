@@ -1,0 +1,178 @@
+{
+  "$defs": {
+    "GraphicPrimitive": {
+      "description": "Atomo di disegno con coordinate normalizzate 0..1 nella cella.",
+      "properties": {
+        "primitive_type": {
+          "enum": [
+            "line",
+            "polyline",
+            "arc",
+            "circle",
+            "rect",
+            "text"
+          ],
+          "title": "Primitive Type",
+          "type": "string"
+        },
+        "geometry": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "title": "Geometry",
+          "type": "object"
+        },
+        "stroke_width": {
+          "default": 1.0,
+          "title": "Stroke Width",
+          "type": "number"
+        },
+        "layer": {
+          "default": "symbol",
+          "title": "Layer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "primitive_type",
+        "geometry"
+      ],
+      "title": "GraphicPrimitive",
+      "type": "object"
+    },
+    "PinAnchor": {
+      "description": "Punto di connessione elettrica sulla cella (coordinate normalizzate).",
+      "properties": {
+        "anchor_id": {
+          "title": "Anchor Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "direction_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direction Deg"
+        }
+      },
+      "required": [
+        "anchor_id",
+        "x",
+        "y"
+      ],
+      "title": "PinAnchor",
+      "type": "object"
+    }
+  },
+  "description": "Elemento grafico standard riusabile \u2014 es. un contatto NA IEC.",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "default": "graphic_cell",
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "human_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Human Label"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Role"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string"
+    },
+    "primitives": {
+      "items": {
+        "$ref": "#/$defs/GraphicPrimitive"
+      },
+      "title": "Primitives",
+      "type": "array"
+    },
+    "pin_anchors": {
+      "items": {
+        "$ref": "#/$defs/PinAnchor"
+      },
+      "title": "Pin Anchors",
+      "type": "array"
+    },
+    "width_mm": {
+      "exclusiveMinimum": 0.0,
+      "title": "Width Mm",
+      "type": "number"
+    },
+    "height_mm": {
+      "exclusiveMinimum": 0.0,
+      "title": "Height Mm",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "category",
+    "primitives",
+    "pin_anchors",
+    "width_mm",
+    "height_mm"
+  ],
+  "title": "GraphicCellDefinition",
+  "type": "object"
+}

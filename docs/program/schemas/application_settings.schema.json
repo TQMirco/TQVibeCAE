@@ -1,0 +1,45 @@
+{
+  "description": "Impostazioni globali applicazione.",
+  "properties": {
+    "library_db_path": {
+      "default": "",
+      "title": "Library Db Path",
+      "type": "string"
+    },
+    "default_projects_path": {
+      "default": "",
+      "title": "Default Projects Path",
+      "type": "string"
+    },
+    "ui_language": {
+      "default": "it",
+      "title": "Ui Language",
+      "type": "string"
+    },
+    "theme": {
+      "default": "system",
+      "title": "Theme",
+      "type": "string"
+    },
+    "autosave_interval_sec": {
+      "default": 300,
+      "minimum": 0,
+      "title": "Autosave Interval Sec",
+      "type": "integer"
+    },
+    "recovery_retention_days": {
+      "default": 7,
+      "minimum": 0,
+      "title": "Recovery Retention Days",
+      "type": "integer"
+    },
+    "undo_max_depth": {
+      "default": 100,
+      "minimum": 1,
+      "title": "Undo Max Depth",
+      "type": "integer"
+    }
+  },
+  "title": "ApplicationSettings",
+  "type": "object"
+}

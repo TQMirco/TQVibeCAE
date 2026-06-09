@@ -1,0 +1,199 @@
+{
+  "$defs": {
+    "CatalogReference": {
+      "description": "Puntatore versionato a una definizione in libreria.",
+      "properties": {
+        "definition_id": {
+          "format": "uuid",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "definition_version": {
+          "title": "Definition Version",
+          "type": "integer"
+        },
+        "catalog_kind": {
+          "enum": [
+            "component",
+            "symbol",
+            "part",
+            "footprint",
+            "graphic_cell",
+            "graphic_composition"
+          ],
+          "title": "Catalog Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition_id",
+        "definition_version",
+        "catalog_kind"
+      ],
+      "title": "CatalogReference",
+      "type": "object"
+    },
+    "GraphicCellInstance": {
+      "description": "Istanza di una cella base con transform e ripetizione.",
+      "properties": {
+        "cell_ref": {
+          "$ref": "#/$defs/CatalogReference"
+        },
+        "instance_id": {
+          "title": "Instance Id",
+          "type": "string"
+        },
+        "transform": {
+          "$ref": "#/$defs/GraphicTransform"
+        },
+        "repeat_count": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Repeat Count",
+          "type": "integer"
+        },
+        "repeat_spacing_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repeat Spacing Mm"
+        }
+      },
+      "required": [
+        "cell_ref",
+        "instance_id"
+      ],
+      "title": "GraphicCellInstance",
+      "type": "object"
+    },
+    "GraphicTransform": {
+      "description": "Trasformazione locale di un'istanza cella.",
+      "properties": {
+        "translate_x_mm": {
+          "default": 0.0,
+          "title": "Translate X Mm",
+          "type": "number"
+        },
+        "translate_y_mm": {
+          "default": 0.0,
+          "title": "Translate Y Mm",
+          "type": "number"
+        },
+        "rotate_deg": {
+          "default": 0.0,
+          "title": "Rotate Deg",
+          "type": "number"
+        },
+        "scale": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Scale",
+          "type": "number"
+        }
+      },
+      "title": "GraphicTransform",
+      "type": "object"
+    },
+    "PinMapping": {
+      "description": "Mappa anchor cella \u2192 pin logico simbolo.",
+      "properties": {
+        "symbol_pin_id": {
+          "title": "Symbol Pin Id",
+          "type": "string"
+        },
+        "cell_instance_id": {
+          "title": "Cell Instance Id",
+          "type": "string"
+        },
+        "cell_anchor_id": {
+          "title": "Cell Anchor Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol_pin_id",
+        "cell_instance_id",
+        "cell_anchor_id"
+      ],
+      "title": "PinMapping",
+      "type": "object"
+    }
+  },
+  "description": "Composizione di celle \u2014 es. interruttore 3 poli = 3x contatto.",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "title": "Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "default": "symbol_graphic_composition",
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "human_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Human Label"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Role"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "cells": {
+      "items": {
+        "$ref": "#/$defs/GraphicCellInstance"
+      },
+      "title": "Cells",
+      "type": "array"
+    },
+    "pin_map": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PinMapping"
+      },
+      "title": "Pin Map",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "cells"
+  ],
+  "title": "SymbolGraphicComposition",
+  "type": "object"
+}

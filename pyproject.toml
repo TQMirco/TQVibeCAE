@@ -27,6 +27,10 @@ dev = [
 requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
+[project.scripts]
+tqvibecae-demo-schematic = "tqvibecae.demo.schematic_preview:main"
+tqvibecae-editor = "tqvibecae.demo.schematic_editor:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
